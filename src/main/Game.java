@@ -8,6 +8,7 @@ public class Game implements Runnable {
     private Thread gameLoopThread;
     private final int FPS_SET = 120;
 
+    // Instantiates a new class
     public Game() {
         this.gamePanel = new GamePanel();
         this.gameWindow = new GameWindow(gamePanel);
@@ -21,6 +22,7 @@ public class Game implements Runnable {
         this.gameLoopThread.start();
     }
 
+    // This task is performed in the game loop thread
     @Override
     public void run() {
         double timePerFrame = 1_000_000_000.0 / FPS_SET;
@@ -31,6 +33,7 @@ public class Game implements Runnable {
         while (true) {
             long now = System.nanoTime();
 
+            // Repaint UI after time per frame
             if (now - lastFrameTime >= timePerFrame) {
                 gamePanel.updateRectangle();
                 gamePanel.repaint();
@@ -45,6 +48,7 @@ public class Game implements Runnable {
                 lastFpsCheck = System.currentTimeMillis();
             }
 
+            // Prevent overworking the CPU :(
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
