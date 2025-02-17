@@ -3,7 +3,8 @@ package main;
 public class Game {
 
     public Game() {
-        GameWindow gameWindow = new GameWindow();
+        GamePanel gamePanel = new GamePanel();
+        GameWindow gameWindow = new GameWindow(gamePanel);
     }
 
 }
