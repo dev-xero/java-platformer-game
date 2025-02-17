@@ -8,11 +8,11 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
 
-    private int xDelta, yDelta = 0;
+    private int xDelta, yDelta = 100;
 
     public GamePanel() {
         KeyboardInputs keyboardInputs = new KeyboardInputs(this);
-        MouseInputs mouseInputs = new MouseInputs();
+        MouseInputs mouseInputs = new MouseInputs(this);
 
         addKeyListener(keyboardInputs);
         addMouseListener(mouseInputs);
@@ -21,17 +21,26 @@ public class GamePanel extends JPanel {
 
     public void changeXDelta(int dx) {
         this.xDelta += dx;
+        repaint();
     }
 
     public void changeYDelta(int dy) {
         this.yDelta += dy;
+        repaint();
+    }
+
+    public void setRectPosition(int x, int y) {
+        this.xDelta = x;
+        this.yDelta = y;
+
+        repaint();
     }
 
     // Paint component is called everytime the ui updates
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.fillRect(10 + xDelta, 10 + yDelta, 200, 200);
+        g.fillRect(xDelta,  yDelta, 200, 200);
     }
 
 }
