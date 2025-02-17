@@ -8,8 +8,10 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
 
+    private int xDelta, yDelta = 0;
+
     public GamePanel() {
-        KeyboardInputs keyboardInputs = new KeyboardInputs();
+        KeyboardInputs keyboardInputs = new KeyboardInputs(this);
         MouseInputs mouseInputs = new MouseInputs();
 
         addKeyListener(keyboardInputs);
@@ -17,11 +19,19 @@ public class GamePanel extends JPanel {
         addMouseMotionListener(mouseInputs);
     }
 
+    public void changeXDelta(int dx) {
+        this.xDelta += dx;
+    }
+
+    public void changeYDelta(int dy) {
+        this.yDelta += dy;
+    }
+
     // Paint component is called everytime the ui updates
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.fillRect(0, 0, 200, 200);
+        g.fillRect(10 + xDelta, 10 + yDelta, 200, 200);
     }
 
 }
