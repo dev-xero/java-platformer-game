@@ -49,11 +49,11 @@ public class Game implements Runnable {
             }
 
             // Prevent overworking the CPU :(
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
