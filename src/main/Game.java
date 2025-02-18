@@ -35,7 +35,6 @@ public class Game implements Runnable {
 
             // Repaint UI after time per frame
             if (now - lastFrameTime >= timePerFrame) {
-                gamePanel.updateRectangle();
                 gamePanel.repaint();
                 lastFrameTime = now;
                 frames++;

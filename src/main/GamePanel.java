@@ -3,27 +3,51 @@ package main;
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class GamePanel extends JPanel {
 
-    private float xDelta = 100, yDelta = 100;
-    private float xDirection = 1.0f, yDirection = 1.0f;
-    private final Random random;
-    private Color color = new Color(150, 20, 90);
+    private final KeyboardInputs keyboardInputs;
+    private final MouseInputs mouseInputs;
+    private BufferedImage bufImg;
+    private float xDelta = 100;
+    private float yDelta = 100;
 
     // Instantiates new game panel
     public GamePanel() {
-        KeyboardInputs keyboardInputs = new KeyboardInputs(this);
-        MouseInputs mouseInputs = new MouseInputs(this);
+        keyboardInputs = new KeyboardInputs(this);
+         mouseInputs = new MouseInputs(this);
 
-        random = new Random();
+         importImage();
+         setPanelSize();
 
         addKeyListener(keyboardInputs);
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
+    }
+
+    // Sets preferred panel size
+    private void setPanelSize() {
+        Dimension size = new Dimension(1280, 800);
+        setPreferredSize(size);
+    }
+
+    // Loads image from resource folder into buffer
+    private void importImage() {
+        InputStream is = getClass().getResourceAsStream("/player_sprites.png");
+        try {
+            if (is == null) {
+                throw new IOException("Image not found.");
+            }
+            bufImg = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Increments x position by dx
@@ -36,43 +60,12 @@ public class GamePanel extends JPanel {
         yDelta += dy;
     }
 
-    // Sets rectangle position to (x, y) coordinates
-    public void setRectPosition(int x, int y) {
-        xDelta = x;
-        yDelta = y;
-    }
-
-    // Generates a random hex triplet color
-    public Color getRandomColor() {
-        int r = random.nextInt(256);
-        int g = random.nextInt(256);
-        int b = random.nextInt(256);
-
-        return new Color(r, g, b);
-    }
-
-    // Updates rectangle direction and colors
-    public void updateRectangle() {
-        xDelta += xDirection;
-        if (0 > xDelta || xDelta > 400) {
-            xDirection *= -1;
-            color = getRandomColor();
-        }
-
-        yDelta += yDirection;
-        if (0 > yDelta || yDelta > 400) {
-            yDirection *= -1;
-            color = getRandomColor();
-        }
-    }
-
     // Paint component is called everytime the ui updates
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.setColor(color);
-        g.fillRect((int) xDelta,  (int) yDelta, 200, 50);
+        g.drawImage(bufImg, 0, 0, null);
     }
 
 }
