@@ -2,7 +2,6 @@ package main;
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
-import utils.Constants;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -30,6 +29,8 @@ public class GamePanel extends JPanel {
     private int animationSpeed = 15;
 
     private int playerAction = PlayerConstants.IDLE;
+    private int playerDirection = -1;
+    private boolean isMoving = false;
 
 
     public GamePanel() {
@@ -66,12 +67,40 @@ public class GamePanel extends JPanel {
         }
     }
 
+    public void setDirection(int direction) {
+        playerDirection = direction;
+        isMoving = true;
+    }
+
+    public void setIsMoving(boolean moving) {
+        isMoving = moving;
+    }
+
     private void loadAnimations() {
         animations = new BufferedImage[9][6];
 
         for (int i = 0; i < animations.length; i++) {
             for (int j = 0; j < animations[j].length; j++) {
                 animations[i][j] = bufImage.getSubimage(j * 64, i * 40, 64, 40);
+            }
+        }
+    }
+
+    private void updatePosition() {
+        if (isMoving) {
+            switch (playerDirection) {
+                case Directions.LEFT:
+                    xDelta -= 5;
+                    break;
+                case Directions.UP:
+                    yDelta -= 5;
+                    break;
+                case Directions.RIGHT:
+                    xDelta += 5;
+                    break;
+                case Directions.DOWN:
+                    yDelta += 5;
+                    break;
             }
         }
     }
@@ -89,26 +118,24 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void changeXDelta(int dx) {
-        xDelta += dx;
+    private void setAnimation() {
+        if (isMoving) {
+            playerAction = PlayerConstants.RUNNING;
+        } else {
+            playerAction = PlayerConstants.IDLE;
+        }
     }
 
-    public void changeYDelta(int dy) {
-        yDelta += dy;
-    }
-
-    public void setRectPosition(int x, int y) {
-        xDelta = x;
-        yDelta = y;
-    }
-
-    // Paint component is called everytime the ui updates
     @Override
+    // Paint component is called everytime the UI updates
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         updateAnimationTick();
-        g.drawImage(animations[playerAction][animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
+        setAnimation();
+        updatePosition();
+
+        g.drawImage(animations[playerAction][animationIndex], (int) xDelta, (int) yDelta, 256, 160, null);
     }
 
 }
