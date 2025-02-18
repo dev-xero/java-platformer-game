@@ -43,10 +43,8 @@ public class GamePanel extends JPanel {
     }
 
     private void setPanelSize() {
-
         Dimension size = new Dimension(1280, 800);
         setPreferredSize(size);
-
     }
 
     // Loads image from resource folder into buffer
@@ -56,6 +54,7 @@ public class GamePanel extends JPanel {
             if (inputStream == null) {
                 throw new IOException("Resource not found: " + playerSpritesResource);
             }
+
             bufImage = ImageIO.read(inputStream);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load image", e);
@@ -90,22 +89,16 @@ public class GamePanel extends JPanel {
     }
 
     public void changeXDelta(int dx) {
-
         xDelta += dx;
-
     }
 
     public void changeYDelta(int dy) {
-
         yDelta += dy;
-
     }
 
     public void setRectPosition(int x, int y) {
-
         xDelta = x;
         yDelta = y;
-
     }
 
     // Paint component is called everytime the ui updates
