@@ -14,7 +14,8 @@ public class GamePanel extends JPanel {
 
     private final KeyboardInputs keyboardInputs;
     private final MouseInputs mouseInputs;
-    private BufferedImage bufImg;
+    private BufferedImage bufImage;
+    private BufferedImage subBufImage;
     private float xDelta = 100;
     private float yDelta = 100;
 
@@ -44,7 +45,7 @@ public class GamePanel extends JPanel {
             if (is == null) {
                 throw new IOException("Image not found.");
             }
-            bufImg = ImageIO.read(is);
+            bufImage = ImageIO.read(is);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,12 +61,20 @@ public class GamePanel extends JPanel {
         yDelta += dy;
     }
 
+    // Sets rect position using (x, y) coordinate
+    public void setRectPosition(int x, int y) {
+        xDelta = x;
+        yDelta = y;
+    }
+
     // Paint component is called everytime the ui updates
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.drawImage(bufImg, 0, 0, null);
+        // so we can sub-image buffered images, nice
+        subBufImage = bufImage.getSubimage(1 * 64, 8 * 40,64, 40);
+        g.drawImage(subBufImage, (int) xDelta, (int) yDelta, 128, 80, null);
     }
 
 }
