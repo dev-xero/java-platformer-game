@@ -13,7 +13,6 @@ public class GamePanel extends JPanel {
     private final MouseInputs mouseInputs;
 
     public GamePanel(Game game) {
-
         this.game = game;
 
         keyboardInputs = new KeyboardInputs(this);
@@ -24,7 +23,6 @@ public class GamePanel extends JPanel {
         addKeyListener(keyboardInputs);
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
-
     }
 
     /** Paints game components on every render. */
