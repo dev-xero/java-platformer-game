@@ -39,12 +39,14 @@ public class GamePanel extends JPanel {
         addKeyListener(keyboardInputs);
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
+
     }
 
     private void setPanelSize() {
 
         Dimension size = new Dimension(1280, 800);
         setPreferredSize(size);
+
     }
 
     // Loads image from resource folder into buffer
@@ -58,6 +60,7 @@ public class GamePanel extends JPanel {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load image", e);
         }
+
     }
 
     private void loadAnimations() {
@@ -69,6 +72,7 @@ public class GamePanel extends JPanel {
                 animations[i][j] = bufImage.getSubimage(j * 64, i * 40, 64, 40);
             }
         }
+
     }
 
     private void updateAnimationTick() {
@@ -82,22 +86,26 @@ public class GamePanel extends JPanel {
                 animationIndex = 0;
             }
         }
+
     }
 
     public void changeXDelta(int dx) {
 
         xDelta += dx;
+
     }
 
     public void changeYDelta(int dy) {
 
         yDelta += dy;
+
     }
 
     public void setRectPosition(int x, int y) {
 
         xDelta = x;
         yDelta = y;
+
     }
 
     // Paint component is called everytime the ui updates
@@ -108,6 +116,7 @@ public class GamePanel extends JPanel {
 
         updateAnimationTick();
         g.drawImage(animations[1][animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
+
     }
 
 }
