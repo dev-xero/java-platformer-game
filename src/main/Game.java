@@ -1,35 +1,60 @@
 package main;
 
+import entities.Player;
+
+import java.awt.*;
+
 public class Game implements Runnable {
 
+    private Thread gameLoopThread;
     private final GamePanel gamePanel;
     private final GameWindow gameWindow;
-    private Thread gameLoopThread;
 
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
 
+    private Player player;
 
+    /** Constructor */
     public Game() {
+        initializeClasses();
 
-        gamePanel = new GamePanel();
+        gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
-
         gamePanel.requestFocus();
 
         startGameLoop();
-
     }
 
-    private void startGameLoop() {
-        gameLoopThread = new Thread(this);
-        gameLoopThread.start();
-    }
-
+    /** Synchronizes game entities update. */
     public void update() {
-        gamePanel.updateGame();
+        player.update();
     }
 
+    /** Synchronizes game  entities to render. */
+    public void render(Graphics g) {
+        player.render(g);
+    }
+
+    /** Returns instantiated player object. */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * This block of code is executed inside the game thread continuously.
+     *
+     * It holds the time per frame and time per update and calculates
+     * when to re-render the game based on how much time has passed since
+     * the last painting: deltaU and deltaF.
+     *
+     * The update ticks are responsible for synchronizing player movement,
+     * keyboard events, mouse etc.
+     *
+     * The fps block repaints the game panel when delta frame exceeds
+     * 1.0.
+     *
+    */
     @Override
     public void run() {
         double timePerFrame = 1_000_000_000.0 / FPS_SET;
@@ -76,6 +101,17 @@ public class Game implements Runnable {
                 updates = 0;
             }
         }
+    }
+
+    /** Starts game update loop on a separate thread. */
+    private void startGameLoop() {
+        gameLoopThread = new Thread(this);
+        gameLoopThread.start();
+    }
+
+    /** Responsible for initializing all entity classes. */
+    private void initializeClasses() {
+        player = new Player(200, 200);
     }
 
 }
