@@ -2,6 +2,7 @@ package main;
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
+import utils.Constants;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,12 +11,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static utils.Constants.*;
+
 public class GamePanel extends JPanel {
 
+    private final String playerSpritesResource = "/player_sprites.png";
     private final KeyboardInputs keyboardInputs;
     private final MouseInputs mouseInputs;
 
-    private final String playerSpritesResource = "/player_sprites.png";
     private BufferedImage bufImage;
     private BufferedImage[][] animations;
 
@@ -25,6 +28,8 @@ public class GamePanel extends JPanel {
     private int animationTick = 0;
     private int animationIndex = 0;
     private int animationSpeed = 15;
+
+    private int playerAction = PlayerConstants.IDLE;
 
 
     public GamePanel() {
@@ -49,8 +54,8 @@ public class GamePanel extends JPanel {
 
     // Loads image from resource folder into buffer
     private void importImage() {
-
         try (InputStream inputStream = getClass().getResourceAsStream(playerSpritesResource)){
+
             if (inputStream == null) {
                 throw new IOException("Resource not found: " + playerSpritesResource);
             }
@@ -59,11 +64,9 @@ public class GamePanel extends JPanel {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load image", e);
         }
-
     }
 
     private void loadAnimations() {
-
         animations = new BufferedImage[9][6];
 
         for (int i = 0; i < animations.length; i++) {
@@ -71,21 +74,19 @@ public class GamePanel extends JPanel {
                 animations[i][j] = bufImage.getSubimage(j * 64, i * 40, 64, 40);
             }
         }
-
     }
 
     private void updateAnimationTick() {
-
         animationTick++;
+
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
 
-            if (animationIndex >= 6) {
+            if (animationIndex >= PlayerConstants.GetSpriteCount(playerAction)) {
                 animationIndex = 0;
             }
         }
-
     }
 
     public void changeXDelta(int dx) {
@@ -104,12 +105,10 @@ public class GamePanel extends JPanel {
     // Paint component is called everytime the ui updates
     @Override
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
 
         updateAnimationTick();
-        g.drawImage(animations[1][animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
-
+        g.drawImage(animations[playerAction][animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
     }
 
 }
