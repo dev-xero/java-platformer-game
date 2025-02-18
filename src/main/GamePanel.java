@@ -15,8 +15,9 @@ public class GamePanel extends JPanel {
     private final KeyboardInputs keyboardInputs;
     private final MouseInputs mouseInputs;
 
+    private final String playerSpritesResource = "/player_sprites.png";
     private BufferedImage bufImage;
-    private BufferedImage[] idleAnimation;
+    private BufferedImage[][] animations;
 
     private float xDelta = 100;
     private float yDelta = 100;
@@ -49,29 +50,24 @@ public class GamePanel extends JPanel {
     // Loads image from resource folder into buffer
     private void importImage() {
 
-        InputStream is = getClass().getResourceAsStream("/player_sprites.png");
-
-        if (is != null) {
-            try {
-                bufImage = ImageIO.read(is);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        try (InputStream inputStream = getClass().getResourceAsStream(playerSpritesResource)){
+            if (inputStream == null) {
+                throw new IOException("Resource not found: " + playerSpritesResource);
             }
+            bufImage = ImageIO.read(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load image", e);
         }
     }
 
     private void loadAnimations() {
 
-        idleAnimation = new BufferedImage[5];
+        animations = new BufferedImage[9][6];
 
-        for (int i = 0; i < idleAnimation.length; i++) {
-            idleAnimation[i] = bufImage.getSubimage(i * 64, 0, 64, 40);
+        for (int i = 0; i < animations.length; i++) {
+            for (int j = 0; j < animations[j].length; j++) {
+                animations[i][j] = bufImage.getSubimage(j * 64, i * 40, 64, 40);
+            }
         }
     }
 
@@ -82,8 +78,7 @@ public class GamePanel extends JPanel {
             animationTick = 0;
             animationIndex++;
 
-            // Idle animation length is 5
-            if (animationIndex >= 5) {
+            if (animationIndex >= 6) {
                 animationIndex = 0;
             }
         }
@@ -112,8 +107,7 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
 
         updateAnimationTick();
-
-        g.drawImage(idleAnimation[animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
+        g.drawImage(animations[1][animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
     }
 
 }
