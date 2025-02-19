@@ -41,6 +41,11 @@ public class Game implements Runnable {
         return player;
     }
 
+    /** Resets game state on focus lost. */
+    public void windowFocusLost() {
+        player.resetDirectionBooleans();
+    }
+
     /**
      * This block of code is executed inside the game thread continuously.
      *

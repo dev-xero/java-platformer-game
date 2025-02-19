@@ -17,22 +17,21 @@ public class Player extends Entity {
     private int animationIndex = 0;
     private int animationSpeed = 15;
 
-    private int playerAction = Constants.PlayerConstants.IDLE;
-    private int playerDirection = -1;
+    private boolean left, up, right, down;
+    private float playerSpeed = 2.0f;
     private boolean isMoving = false;
+    private int playerAction = Constants.PlayerConstants.IDLE;
 
     public Player(float x, float y) {
-
         super(x, y);
         loadAnimations();
-
     }
 
     /** Handles player animation and position updates. */
     public void update() {
+        updatePosition();
         updateAnimationTick();
         setAnimation();
-        updatePosition();
     }
 
     /** Handles player graphics rendering. */
@@ -40,15 +39,43 @@ public class Player extends Entity {
         g.drawImage(animations[playerAction][animationIndex], (int) x, (int) y, 256, 160, null);
     }
 
-    /** Handles player movement direction setting. */
-    public void setDirection(int direction) {
-        playerDirection = direction;
-        isMoving = true;
+    public void setLeft(boolean left) {
+        this.left = left;
     }
 
-    /** Handles player movement state. */
-    public void setIsMoving(boolean moving) {
-        isMoving = moving;
+    public boolean isLeft() {
+        return left;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void resetDirectionBooleans() {
+        left = false;
+        up = false;
+        right = false;
+        down = false;
     }
 
     /** Loads image from resource folder into buffer. */
@@ -74,21 +101,24 @@ public class Player extends Entity {
 
     /** Handles player position updates. */
     private void updatePosition() {
-        if (isMoving) {
-            switch (playerDirection) {
-                case Constants.Directions.LEFT:
-                    x -= 5;
-                    break;
-                case Constants.Directions.UP:
-                    y -= 5;
-                    break;
-                case Constants.Directions.RIGHT:
-                    x += 5;
-                    break;
-                case Constants.Directions.DOWN:
-                    y += 5;
-                    break;
-            }
+        isMoving = false;
+
+        // Horizontal movements
+        if (left && !right) {
+            isMoving = true;
+            x -= playerSpeed;
+        } else if (right && !left) {
+            isMoving = true;
+            x += playerSpeed;
+        }
+
+        // Vertical movements
+        if (up && !down) {
+            isMoving = true;
+            y -= playerSpeed;
+        } else if (down && !up) {
+            isMoving = true;
+            y += playerSpeed;
         }
     }
 
