@@ -1,5 +1,6 @@
 package inputs;
 
+import main.Game;
 import main.GamePanel;
 
 import java.awt.event.MouseEvent;
@@ -9,9 +10,11 @@ import java.awt.event.MouseMotionListener;
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
     private final GamePanel gamePanel;
+    private final Game game;
 
     public MouseInputs(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
+        this.game = this.gamePanel.getGame();
     }
 
     @Override
@@ -21,7 +24,11 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     public void mouseMoved(MouseEvent mouseEvent) {}
 
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {}
+    public void mouseClicked(MouseEvent mouseEvent) {
+        if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
+            game.getPlayer().setIsAttacking(true);
+        }
+    }
 
     @Override
     public void mousePressed(MouseEvent mouseEvent) {}

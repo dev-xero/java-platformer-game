@@ -1,12 +1,12 @@
 package entities;
 
-import utils.Constants;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static utils.Constants.*;
 
 public class Player extends Entity {
 
@@ -17,10 +17,11 @@ public class Player extends Entity {
     private int animationIndex = 0;
     private int animationSpeed = 15;
 
-    private boolean left, up, right, down;
     private float playerSpeed = 2.0f;
     private boolean isMoving = false;
-    private int playerAction = Constants.PlayerConstants.IDLE;
+    private boolean isAttacking = false;
+    private int playerAction = PlayerConstants.IDLE;
+    private boolean left, up, right, down;
 
     public Player(float x, float y) {
         super(x, y);
@@ -39,43 +40,26 @@ public class Player extends Entity {
         g.drawImage(animations[playerAction][animationIndex], (int) x, (int) y, 256, 160, null);
     }
 
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
+    /** Setters for direction booleans. */
+    public void setLeft(boolean left) { this.left = left; }
 
-    public boolean isLeft() {
-        return left;
-    }
+    public void setUp(boolean up) { this.up = up; }
 
-    public void setUp(boolean up) {
-        this.up = up;
-    }
+    public void setRight(boolean right) { this.right = right; }
 
-    public boolean isUp() {
-        return up;
-    }
+    public void setDown(boolean down) { this.down = down; }
 
-    public void setRight(boolean right) {
-        this.right = right;
-    }
-
-    public boolean isRight() {
-        return right;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
+    /** Resets direction booleans to false. */
     public void resetDirectionBooleans() {
         left = false;
         up = false;
         right = false;
         down = false;
+    }
+
+    /** Setter for `isAttacking` field. */
+    public void setIsAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
     }
 
     /** Loads image from resource folder into buffer. */
@@ -133,18 +117,33 @@ public class Player extends Entity {
             animationTick = 0;
             animationIndex++;
 
-            if (animationIndex >= Constants.PlayerConstants.GetSpriteCount(playerAction)) {
+            if (animationIndex >= PlayerConstants.GetSpriteCount(playerAction)) {
                 animationIndex = 0;
+                isAttacking = false;
             }
         }
     }
 
+    /** Resets both animation tick and index. */
+    private void resetAnimation() {
+        animationTick = 0;
+        animationIndex = 0;
+    }
+
     /** Sets the appropriate player animation action. */
     private void setAnimation() {
-        if (isMoving) {
-            playerAction = Constants.PlayerConstants.RUNNING;
-        } else {
-            playerAction = Constants.PlayerConstants.IDLE;
+        int startAnimation = playerAction;
+
+        if (isMoving)
+            playerAction = PlayerConstants.RUNNING;
+        else
+            playerAction = PlayerConstants.IDLE;
+
+        if (isAttacking)
+            playerAction = PlayerConstants.ATTACK_1;
+
+        if (startAnimation != playerAction) {
+            resetAnimation();
         }
     }
 
