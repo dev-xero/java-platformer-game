@@ -10,15 +10,29 @@ public class LevelManager {
 
     private Game game;
     private BufferedImage[] levelSprite;
+    private Level levelOne;
 
 
     public LevelManager(Game game) {
         this.game = game;
         importOutsideSprites();
+        levelOne = new Level(LoadSave.GetLevelData());
     }
 
     public void render(Graphics g) {
-        g.drawImage(levelSprite[2], 0, 0, null);
+        for (int y = 0; y < Game.TILES_IN_HEIGHT; y++) {
+            for (int x = 0; x < Game.TILES_IN_WIDTH; x++) {
+                int index = levelOne.getSpriteIndex(x, y);
+                g.drawImage(
+                        levelSprite[index],
+                        Game.TILES_SIZE * x,
+                        Game.TILES_SIZE * y,
+                        Game.TILES_SIZE,
+                        Game.TILES_SIZE,
+                        null
+                );
+            }
+        }
     }
 
     public void update() {
