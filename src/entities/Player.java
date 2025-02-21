@@ -1,16 +1,14 @@
 package entities;
 
-import javax.imageio.ImageIO;
+import utils.LoadSave;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static utils.Constants.*;
 
 public class Player extends Entity {
 
-    private String playerSpritesResource = "/player_sprites.png";
     private BufferedImage[][] animations;
 
     private int animationTick = 0;
@@ -64,22 +62,13 @@ public class Player extends Entity {
 
     /** Loads image from resource folder into buffer. */
     private void loadAnimations() {
-        try (InputStream inputStream = getClass().getResourceAsStream(playerSpritesResource)) {
-            if (inputStream == null) {
-                throw new IOException("Resource not found: " + playerSpritesResource);
+        BufferedImage bufImage = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+        animations = new BufferedImage[9][6];
+
+        for (int i = 0; i < animations.length; i++) {
+            for (int j = 0; j < animations[j].length; j++) {
+                animations[i][j] = bufImage.getSubimage(j * 64, i * 40, 64, 40);
             }
-
-            BufferedImage bufImage = ImageIO.read(inputStream);
-
-            animations = new BufferedImage[9][6];
-
-            for (int i = 0; i < animations.length; i++) {
-                for (int j = 0; j < animations[j].length; j++) {
-                    animations[i][j] = bufImage.getSubimage(j * 64, i * 40, 64, 40);
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load image", e);
         }
     }
 
