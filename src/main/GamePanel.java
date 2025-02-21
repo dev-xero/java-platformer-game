@@ -18,7 +18,7 @@ public class GamePanel extends JPanel {
         keyboardInputs = new KeyboardInputs(this);
         mouseInputs = new MouseInputs(this);
 
-        setPanelSize(1280, 800);
+        setPanelSize(Game.GAME_WIDTH, Game.GAME_HEIGHT);
 
         addKeyListener(keyboardInputs);
         addMouseListener(mouseInputs);
@@ -47,6 +47,7 @@ public class GamePanel extends JPanel {
     private void setPanelSize(int width, int height) {
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
+        System.out.println("Size: " + width + " x " + height);
     }
 
 }
