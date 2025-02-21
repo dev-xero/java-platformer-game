@@ -17,7 +17,7 @@ public class Game implements Runnable {
     private Player player;
     private LevelManager levelManager;
 
-    public final static float SCALE = 1.5f;
+    public final static float SCALE = 2.0f;
     private final static int TILE_DEFAULT_SIZE = 32;
     public final static int TILES_IN_WIDTH = 26;
     public final static int TILES_IN_HEIGHT = 14;
@@ -44,8 +44,8 @@ public class Game implements Runnable {
 
     /** Synchronizes game  entities to render. */
     public void render(Graphics g) {
-        player.render(g);
         levelManager.render(g);
+        player.render(g);
     }
 
     /** Returns instantiated player object. */
